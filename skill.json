@@ -1,0 +1,17 @@
+{
+  "name": "genpark-mvcc-snapshot-isolation-engine-skill",
+  "version": "1.0.0",
+  "description": "Multi-Version Concurrency Control (MVCC) transactional engine with Snapshot Isolation, Read Views, Undo chains, and First-Committer-Wins conflict resolution.",
+  "main": "client.py",
+  "mcp_server": "mcp_server.py",
+  "topics": [
+    "genpark-skill",
+    "agentic-ai",
+    "mvcc",
+    "snapshot-isolation",
+    "acid-transactions",
+    "database-engine",
+    "concurrency-control"
+  ],
+  "dependencies": []
+}
