@@ -1,34 +1,19 @@
-# genpark-mvcc-snapshot-isolation-engine-skill
+# MVCC Snapshot Isolation Engine Skill
 
-[![CI](https://github.com/alphaparkinc/genpark-mvcc-snapshot-isolation-engine-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/alphaparkinc/genpark-mvcc-snapshot-isolation-engine-skill/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-
-> Multi-Version Concurrency Control (MVCC) transactional engine with Snapshot Isolation, Read Views, Undo chains, and First-Committer-Wins conflict resolution.
-
-## Architecture
-
-```mermaid
-flowchart TD
-    Client[AI Agent / Client] -->|Function Call| Engine[genpark-mvcc-snapshot-isolation-engine-skill]
-    Engine --> Subsystem[Storage & Concurrency Engine]
-    Subsystem --> State[(Zero-Dependency Buffer / Disk Store)]
-```
+Robust, zero-dependency Python implementation of **Multi-Version Concurrency Control (MVCC)** supporting non-blocking concurrent reads and writes with periodic epoch vacuuming.
 
 ## Features
-- Pure standard library Python implementation with strictly zero pip dependencies.
-- Production-grade algorithms with rigorous type safety and clear abstraction boundaries.
-- Native Model Context Protocol (MCP) server integration for seamless AI agent orchestration.
+- **Temporal Version Visibility**: Every record maintains `created_ts` and `expired_ts` intervals.
+- **Lock-Free Reads**: Concurrent reads never block concurrent writes; reads observe pure immutable point-in-time snapshots.
+- **Epoch Garbage Collection**: Vacuuming cleans obsolete record versions safely below active transaction watermarks.
+- **Zero External Dependencies**: Pure Python standard library.
+- **Native MCP Protocol**: JSON-RPC 2.0 stdio server compatible with Claude Desktop, Cursor, and Windsurf.
 
-## Installation
-
-```bash
-git clone https://github.com/alphaparkinc/genpark-mvcc-snapshot-isolation-engine-skill.git
-cd genpark-mvcc-snapshot-isolation-engine-skill
-```
-
-## Quickstart
-
-```bash
-python example_usage.py
+## Architecture
+```mermaid
+graph TD
+    ClientRead["Read Snapshot at ts=25"] --> VList["Version List for Key 'balance'"]
+    VList --> V1["Version 1: [10, 20) -> 1000"]
+    VList --> V2["Version 2: [20, 30) -> 1250 (MATCHED)"]
+    VList --> V3["Version 3: [30, inf) -> 800"]
 ```
