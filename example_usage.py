@@ -1,24 +1,13 @@
 from client import MVCCEngine
 
-def main():
-    print("=== Testing MVCC Snapshot Isolation Engine ===")
-    mvcc = MVCCEngine()
-    t1 = mvcc.begin_transaction()
-    mvcc.write(t1, "balance:alice", 1000)
+mvcc = MVCCEngine()
+mvcc.write("account_balance", 1000.0, write_ts=10)
+mvcc.write("account_balance", 1250.0, write_ts=20)
+mvcc.write("account_balance", 800.0, write_ts=30)
 
-    t2 = mvcc.begin_transaction()
-    val_t2 = mvcc.read(t2, "balance:alice")
-    print("t2 sees balance:alice =>", val_t2)
-    assert val_t2 == 1000
+print("Balance at ts=15:", mvcc.read("account_balance", read_ts=15))
+print("Balance at ts=25:", mvcc.read("account_balance", read_ts=25))
+print("Balance at ts=35:", mvcc.read("account_balance", read_ts=35))
 
-    t3 = mvcc.begin_transaction()
-    mvcc.write(t3, "balance:alice", 1500)
-    print("t3 reads balance:alice =>", mvcc.read(t3, "balance:alice"))
-    print("t2 still reads balance:alice =>", mvcc.read(t2, "balance:alice"))
-
-    assert mvcc.read(t3, "balance:alice") == 1500
-    assert mvcc.read(t2, "balance:alice") == 1000
-    print("=== All tests passed successfully! ===")
-
-if __name__ == "__main__":
-    main()
+cleaned = mvcc.vacuum(oldest_active_ts=20)
+print(f"Vacuumed {cleaned} stale versions prior to ts=20.")
