@@ -1,0 +1,6 @@
+name: genpark-mvcc-snapshot-isolation-engine-skill
+version: 1.0.0
+description: Multi-Version Concurrency Control (MVCC) snapshot isolation engine with epoch vacuuming
+command: python
+args:
+  - mcp_server.py
